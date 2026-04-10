@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Footprint Tracker</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: #f2f2f2;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 320px;
+            margin: 30px auto;
+            box-shadow: 0px 0px 10px gray;
+        }
+
+        input, select {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        small {
+            color: gray;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .calc-btn {
+            background: green;
+        }
+
+        .reset-btn {
+            background: red;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🌍 Carbon Footprint Tracker</h1>
+
+    <div class="container">
+
+        <!-- Travel -->
+        <label>Daily Travel (km)</label><br>
+        <input type="number" id="travel" placeholder="e.g. 20"><br>
+
+        <!-- Electricity Input -->
+        <label>Electricity (kWh/month)</label><br>
+        <input type="number" id="electricity" placeholder="e.g. 150 units/month"><br>
+        <small>Check your electricity bill (units = kWh)</small><br><br>
+
+        <!-- OR Estimate -->
+        <label>Or Select Estimated Usage</label><br>
+        <select id="electricityEstimate">
+            <option value="0">-- Select --</option>
+            <option value="100">Low (Small home)</option>
+            <option value="200">Medium (Average home)</option>
+            <option value="400">High (Heavy usage)</option>
+        </select><br>
+
+        <!-- Transport -->
+        <label>Transport Type</label><br>
+        <select id="transport">
+            <option value="0.21">Car 🚗</option>
+            <option value="0.10">Bike 🏍️</option>
+            <option value="0.05">Bus 🚌</option>
+        </select><br>
+
+        <button class="calc-btn" onclick="calculateCarbon()">Calculate</button>
+        <button class="reset-btn" onclick="resetData()">Reset</button>
+
+        <h2 id="result">--</h2>
+
+    </div>
+
+    <script>
+        function calculateCarbon() {
+            let travel = Number(document.getElementById("travel").value);
+            let electricity = Number(document.getElementById("electricity").value);
+            let estimate = Number(document.getElementById("electricityEstimate").value);
+            let transportFactor = Number(document.getElementById("transport").value);
+
+            // Use estimate if user didn't enter value
+            if (electricity === 0 && estimate !== 0) {
+                electricity = estimate;
+            }
+
+            let travelCO2 = travel * transportFactor;
+            let electricityCO2 = electricity * 0.5;
+
+            let total = (travelCO2 + electricityCO2).toFixed(2);
+
+            let result = document.getElementById("result");
+
+            if (total < 50) {
+                result.style.color = "green";
+                result.innerText = total + " kg CO₂\n🌱 Low Carbon Footprint";
+            } else if (total < 100) {
+                result.style.color = "orange";
+                result.innerText = total + " kg CO₂\n⚠️ Medium Carbon Footprint";
+            } else {
+                result.style.color = "red";
+                result.innerText = total + " kg CO₂\n🔥 High Carbon Footprint";
+            }
+        }
+
+        function resetData() {
+            document.getElementById("travel").value = "";
+            document.getElementById("electricity").value = "";
+            document.getElementById("electricityEstimate").value = "0";
+            document.getElementById("result").innerText = "--";
+        }
+    </script>
+
+</body>
+</html>
